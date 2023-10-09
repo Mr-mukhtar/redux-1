@@ -1,19 +1,79 @@
-import { createStore } from 'redux';
 
-const counterReducer = (state = { counter: 0 }, action) => {
-  if (action.type === 'incriment') {
-    return {
-      counter: state.counter + 5,
-    };
-  }
-  if (action.type === 'decriment') {
-    return {
-      counter: state.counter - 5,
-    };
-  }
-  return state;
-};
+import { configureStore, createSlice } from '@reduxjs/toolkit';
 
-const store = createStore(counterReducer);
+const initialCounterState = { counter: 0, showCounter: true };
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: initialCounterState,
+  reducers: {
+    increment(state) {
+      state.counter++;
+    },
+    decrement(state) {
+      state.counter--;
+    },
+    increase(state, action) {
+      state.counter += action.payload;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
+});
+
+const initialLoginState = { isAuthenticated: false}
+const authSlice= createSlice({
+    name:'auth',
+    initialState: initialLoginState,
+    reducers:{
+login (state)  {
+  state.isAuthenticated = true
+}
+,
+logout (state){
+  state.isAuthenticated = false;
+}
+
+    }
+
+})
+const store = configureStore({
+  reducer:{ counter:counterSlice.reducer,
+auth: authSlice.reducer}
+});
 
 export default store;
+export const counterActions = counterSlice.actions;
+
+export const  authActions = authSlice.actions;
+// const counterReducer = (state = intialState, action) => {
+//   if (action.type === 'increment') {
+//     return {
+//       counter: state.counter + 1,
+//     };
+//   }
+//   if (action.type === 'decrement') {
+//     return {
+//       counter: state.counter - 1,
+//       showCounter: state.showCounter,
+//     };
+//   }
+//   if (action.type === 'increase') {
+//     return {
+//       counter: state.counter + action.amount,
+//       showCounter: state.showCounter,
+//     };
+//   }
+//   if (action.type === 'toggle') {
+//     return {
+//       showCounter: !state.showCounter,
+//       counter: state.counter,
+//     };
+//   }
+//   return state;
+// };
+
+// const store = createStore(counterReducer);
+
+// export default store;
